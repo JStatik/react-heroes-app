@@ -1,27 +1,18 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const useSetLastPath = () => {
-    const { pathname, search } = useLocation();
+    const { pathname } = useLocation();
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        let hero, params;
+        const hero = searchParams.get('hero') || '';
 
-        try {
-            if(search) {
-                params = new URLSearchParams(window.location.search);
-                hero = params.get('hero') || '';
-            }
-
-            if(!hero)
-                localStorage.setItem('uhalp', pathname);
-            else
-                localStorage.setItem('uhalp', `${ pathname }?hero=${ hero }`);
-        } catch(err) {
-            // console.log(err);
-            localStorage.setItem('uhalp', '/dashboard/dc');
-        }
-    }, [pathname, search]);
+        if(!hero)
+            localStorage.setItem('uhalp', pathname);
+        else
+            localStorage.setItem('uhalp', `${ pathname }?hero=${ hero }`);
+    }, [pathname, searchParams]);
 };
 
 export default useSetLastPath;

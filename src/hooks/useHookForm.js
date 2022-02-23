@@ -9,7 +9,7 @@ const useHookForm = (defaultValues, focusField, schema) => {
         defaultValues
     });
 
-    const { dirtyFields, errors, isSubmitting } = useFormState({ control });
+    const { dirtyFields, errors } = useFormState({ control });
 
     useEffect(() => {
         setFocus(focusField);
@@ -19,7 +19,6 @@ const useHookForm = (defaultValues, focusField, schema) => {
         control,
         dirtyFields,
         errors,
-        isSubmitting,
         handleSubmit,
         reset
     };

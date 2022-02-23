@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
-import { Controller } from 'react-hook-form';
-import { SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Form } from 'antd';
 import useHookForm from '../../hooks/useHookForm';
-import getHeroesByName from '../../selectors/getHeroesByName';
+import HeroInput from './SearchForm/HeroInput';
+import SubmitButton from './SearchForm/SubmitButton';
 import { ChildrenCol } from '../../styles/HeroSearch';
 
 const defaultValues = { heroSearch: '' };
@@ -21,35 +20,20 @@ const schema = yup.object().shape({
         })
 });
 
-const SearchForm = ({ loading, setHeroesByName }) => {
-    const navigate = useNavigate();
+const SearchForm = React.memo(({ loading }) => {
+    const [, setSearchParams] = useSearchParams();
 
     const {
         control,
         dirtyFields,
         errors,
-        isSubmitting,
         handleSubmit,
         reset
     } = useHookForm(defaultValues, 'heroSearch', schema);
     
     const onSubmit = ({ heroSearch }) => {
         reset();
-        navigate(`?hero=${ heroSearch }`);
-
-        setHeroesByName(heroesByName => ({
-            ...heroesByName,
-            loading: true
-        }));
-
-        setTimeout(() => {
-            const heroes = getHeroesByName(heroSearch);
-
-            setHeroesByName({
-                ...heroes,
-                loading: false
-            });
-        }, 2000);
+        setSearchParams({ hero: heroSearch });
     };
 
     return (
@@ -60,48 +44,23 @@ const SearchForm = ({ loading, setHeroesByName }) => {
                 onFinish={handleSubmit(onSubmit)}
                 className="animate__animated animate__fadeIn animate__faster"
             >
-                <Form.Item
-                    hasFeedback
-                    name="heroSearch"
-                    label="Super Hero"
-                    validateStatus={
-                        (errors.heroSearch)                             ?   'error'         :
-                        (isSubmitting)                                  ?   'validating'    :
-                        (!errors.heroSearch && dirtyFields.heroSearch)  &&  'success'
-                    }
-                >
-                    <Controller
-                        name="heroSearch"
-                        control={control}
-                        render={({ field }) => (
-                            <Input
-                                {...field}
-                                prefix={<UserOutlined />}
-                                placeholder="Super Hero"
-                            />
-                        )}
-                    />
-                </Form.Item>
+                <HeroInput
+                    control={control}
+                    validating={loading}
+                    error={errors.heroSearch?.message || ''}
+                    success={(!errors.heroSearch && dirtyFields.heroSearch) || false}
+                />
 
-                <Form.Item>
-                    <Button
-                        block
-                        type="primary"
-                        htmlType="submit"
-                        loading={loading}
-                        icon={!loading && <SearchOutlined />}
-                    >
-                        {(!loading) ? 'Search' : 'Searching'}
-                    </Button>
-                </Form.Item>
+                <SubmitButton disabled={loading} />
             </Form>
         </ChildrenCol>
     );
-};
+});
+
+SearchForm.displayName = 'SearchForm';
 
 SearchForm.propTypes = {
-    loading: PropTypes.bool.isRequired,
-    setHeroesByName: PropTypes.func.isRequired
+    loading: PropTypes.bool.isRequired
 };
 
 export default SearchForm;

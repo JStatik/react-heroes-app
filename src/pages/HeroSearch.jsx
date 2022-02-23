@@ -23,10 +23,7 @@ const HeroSearch = () => {
                     xl={9}
                     xxl={9}
                 >
-                    <SearchForm
-                        {...heroesByName}
-                        setHeroesByName={setHeroesByName}
-                    />
+                    <SearchForm {...heroesByName} />
                 </Col>
 
                 <Col

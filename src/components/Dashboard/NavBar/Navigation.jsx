@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tabs } from 'antd';
 
-const Navigation = () => {
+const Navigation = React.memo(() => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
@@ -31,6 +31,8 @@ const Navigation = () => {
             />
         </Tabs>
     );
-};
+});
+
+Navigation.displayName = 'Navigation';
 
 export default Navigation;

@@ -3,7 +3,7 @@ import { LogoutOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { AuthContext } from '../../../context/auth/AuthContext';
 
-const LogoutButton = () => {
+const LogoutButton = React.memo(() => {
     const [loading, setLoading] = useState(false);
     const { startLogout } = useContext(AuthContext);
 
@@ -25,6 +25,8 @@ const LogoutButton = () => {
             Logout
         </Button>
     );
-};
+});
+
+LogoutButton.displayName = 'LogoutButton';
 
 export default LogoutButton;

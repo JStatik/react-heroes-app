@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { EyeFilled } from '@ant-design/icons';
 import { Card, Image, List, Spin } from 'antd';
 import getHeroesByName from '../../selectors/getHeroesByName';
 import { ChildrenCol, ResultsContainer, SpinContainer } from '../../styles/HeroSearch';
 
-const SearchResult = ({ entities, ids, loading, setHeroesByName }) => {
+const SearchResult = React.memo(({ entities, ids, loading, setHeroesByName }) => {
+    const [searchParams] = useSearchParams();
+
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const hero = params.get('hero') || '';
+        const hero = searchParams.get('hero') || '';
 
         if(hero) {
             setHeroesByName(heroesByName => ({
@@ -26,7 +27,7 @@ const SearchResult = ({ entities, ids, loading, setHeroesByName }) => {
                 });
             }, 2000);
         }
-    }, [setHeroesByName]);
+    }, [searchParams, setHeroesByName]);
 
     return (
         <ChildrenCol>
@@ -76,7 +77,9 @@ const SearchResult = ({ entities, ids, loading, setHeroesByName }) => {
             }
         </ChildrenCol>
     );
-};
+});
+
+SearchResult.displayName = 'SearchResult';
 
 SearchResult.propTypes = {
     entities: PropTypes.object.isRequired,

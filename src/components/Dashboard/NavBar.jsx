@@ -5,7 +5,7 @@ import HeroesIcon from './NavBar/HeroesIcon';
 import LogoutButton from './NavBar/LogoutButton';
 import Navigation from './NavBar/Navigation';
 
-const NavBar = () => {
+const NavBar = React.memo(() => {
     return (
         <PageHeader
             subTitle="Heroes"
@@ -19,6 +19,8 @@ const NavBar = () => {
             }
         />
     );
-};
+});
+
+NavBar.displayName = 'NavBar';
 
 export default NavBar;
